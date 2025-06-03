@@ -7,28 +7,31 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 
 @Entity
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserToken {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
-    @Enumerated(value = EnumType.STRING)
-    private TokenType tokenType;
-
-    @ManyToOne
+    @ManyToMany
     @JsonIgnore
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<User> users;
 
-    public enum TokenType{
-        ACTIVE, OTP, EXPIRED, SUSPENDED
-    }
+    @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
+    private List<Resource> resources;
 }

@@ -7,28 +7,32 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 
 @Entity
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserToken {
+public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Column(nullable = false)
+    private String firstName;
 
-    @Enumerated(value = EnumType.STRING)
-    private TokenType tokenType;
+    @Column(nullable = false)
+    private String lastName;
 
-    @ManyToOne
-    @JsonIgnore
+    @Column(nullable = false)
+    private int age;
+
+    @Column(name = "birth_of_date")
+    private LocalDate birthOfDate;
+
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
     private User user;
-
-    public enum TokenType{
-        ACTIVE, OTP, EXPIRED, SUSPENDED
-    }
 }

@@ -1,9 +1,7 @@
 package com.huypt.user_service.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -20,27 +19,25 @@ import java.util.UUID;
 @AllArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID id = UUID.randomUUID();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "username", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "date_of_birth")
-    private LocalDate dateOfBirth;
 
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Profile profile;
 
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<UserToken> userTokens;
 
-    @Column(name = "is_active", nullable = false)
-    private Boolean isActive;
-
-
+    @ManyToMany(mappedBy = "users")
+    @JsonIgnore
+    private List<Role> roles;
 }
