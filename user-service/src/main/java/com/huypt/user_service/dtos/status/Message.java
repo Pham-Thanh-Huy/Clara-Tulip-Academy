@@ -7,5 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class Message {
     public String message;
-    public long status;
+    public int status;
 }

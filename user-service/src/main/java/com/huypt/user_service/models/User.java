@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,4 +41,23 @@ public class User {
     @ManyToMany(mappedBy = "users")
     @JsonIgnore
     private List<Role> roles;
+
+    public void setRelationRole(List<Role> roles) {
+        if (this.roles == null) {
+            this.roles = new ArrayList<>();
+        }
+        for (Role role : roles) {
+            if (!this.roles.contains(role)) {
+                this.roles.add(role);
+                role.getUsers().add(this);
+            }
+        }
+    }
+
+    public void setRelationProfile(Profile profile) {
+        this.profile = profile;
+        if (profile != null) {
+            profile.setUser(this);
+        }
+    }
 }

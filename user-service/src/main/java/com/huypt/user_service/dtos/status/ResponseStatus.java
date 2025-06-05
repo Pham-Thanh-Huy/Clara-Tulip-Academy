@@ -16,5 +16,5 @@ public enum ResponseStatus {
     SERVICE_UNAVAILABLE("Service unavailable!", 503);
 
     private final String message;
-    private final long status;
+    private final int status;
 }

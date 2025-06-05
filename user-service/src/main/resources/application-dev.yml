@@ -7,7 +7,9 @@ spring:
   application:
     name: user-service
   datasource:
-    url: jdbc:mysql://localhost:3307/academy
+    url: jdbc:mysql://localhost:3306/academy
     username: root
     password: root
-
+  jpa:
+    hibernate:
+      ddl-auto: update
