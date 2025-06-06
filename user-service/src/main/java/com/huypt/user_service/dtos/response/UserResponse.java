@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @Builder
-public class CreateOrUpdateResponse {
+public class UserResponse {
     private String username;
 
     private String firstName;

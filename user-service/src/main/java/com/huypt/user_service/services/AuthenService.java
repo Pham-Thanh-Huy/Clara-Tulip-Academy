@@ -1,8 +1,8 @@
 package com.huypt.user_service.services;
 
 import com.huypt.user_service.dtos.CommonResponse;
-import com.huypt.user_service.dtos.request.CreateOrUpdateRequest;
-import com.huypt.user_service.dtos.response.CreateOrUpdateResponse;
+import com.huypt.user_service.dtos.request.CreateOrUpdateUserRequest;
+import com.huypt.user_service.dtos.response.UserResponse;
 import com.huypt.user_service.models.Profile;
 import com.huypt.user_service.models.Role;
 import com.huypt.user_service.models.User;
@@ -16,7 +16,6 @@ import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
@@ -27,7 +26,7 @@ public class AuthenService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
-    public CommonResponse<CreateOrUpdateResponse> register(CreateOrUpdateRequest request) {
+    public CommonResponse<UserResponse> register(CreateOrUpdateUserRequest request) {
         try {
             User userExistByUsername = userRepository.findByUsername(request.getUsername()).orElse(null);
             if (!ObjectUtils.isEmpty(userExistByUsername)) {
@@ -53,7 +52,7 @@ public class AuthenService {
             user.setRelationRole(Collections.singletonList(role));
 
             User userSave = userRepository.save(user);
-            CreateOrUpdateResponse response = CreateOrUpdateResponse.builder()
+            UserResponse response = UserResponse.builder()
                     .username(userSave.getUsername())
                     .firstName(userSave.getProfile().getFirstName())
                     .lastName(userSave.getProfile().getLastName())
@@ -67,4 +66,6 @@ public class AuthenService {
             return CommonResponse.internalServerError(null, null);
         }
     }
+
+
 }

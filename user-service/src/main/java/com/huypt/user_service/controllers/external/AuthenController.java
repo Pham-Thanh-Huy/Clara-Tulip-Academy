@@ -1,9 +1,11 @@
 package com.huypt.user_service.controllers.external;
 
+import com.huypt.user_service.controllers.BaseController;
 import com.huypt.user_service.dtos.CommonResponse;
-import com.huypt.user_service.dtos.request.CreateOrUpdateRequest;
-import com.huypt.user_service.dtos.response.CreateOrUpdateResponse;
+import com.huypt.user_service.dtos.request.CreateOrUpdateUserRequest;
+import com.huypt.user_service.dtos.response.UserResponse;
 import com.huypt.user_service.services.AuthenService;
+import com.huypt.user_service.utils.Constant;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
@@ -14,15 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping(Constant.API_UTIL.API_V1)
 @RequiredArgsConstructor
-public class AuthenController {
+public class AuthenController extends BaseController {
     private final AuthenService authenService;
 
     @PostMapping("/register")
-    public ResponseEntity<CommonResponse<CreateOrUpdateResponse>> register(@RequestBody @Valid CreateOrUpdateRequest
+    public ResponseEntity<CommonResponse<UserResponse>> register(@RequestBody @Valid CreateOrUpdateUserRequest
                                                                                    createOrUpdateRequest) {
-        CommonResponse<CreateOrUpdateResponse> response = authenService.register(createOrUpdateRequest);
-        return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getMessage().getStatus()));
+        CommonResponse<UserResponse> response = authenService.register(createOrUpdateRequest);
+        return baseControllerResponse(response);
     }
 }

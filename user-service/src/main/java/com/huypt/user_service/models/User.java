@@ -36,16 +36,21 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<UserToken> userTokens;
+    private List<UserToken> userTokens = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"), // đây là ID của User
+            inverseJoinColumns = @JoinColumn(name = "role_id") // đây là ID của Role
+    )
     @JsonIgnore
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
+
+
+    // ----> MANY TO MANY
     public void setRelationRole(List<Role> roles) {
-        if (this.roles == null) {
-            this.roles = new ArrayList<>();
-        }
         for (Role role : roles) {
             if (!this.roles.contains(role)) {
                 this.roles.add(role);
@@ -54,6 +59,7 @@ public class User {
         }
     }
 
+    // -------> ONE TO
     public void setRelationProfile(Profile profile) {
         this.profile = profile;
         if (profile != null) {

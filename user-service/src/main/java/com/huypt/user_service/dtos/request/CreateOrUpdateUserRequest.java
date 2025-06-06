@@ -6,12 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
-
 @AllArgsConstructor
 @Builder
 @Data
-public class CreateOrUpdateRequest {
+public class CreateOrUpdateUserRequest {
     @NotNullOrEmptyString(message = "username required and not null!")
     private String username;
 
