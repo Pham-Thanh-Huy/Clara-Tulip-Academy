@@ -2,6 +2,7 @@ package com.huypt.user_service.services;
 
 import com.huypt.user_service.dtos.CommonResponse;
 import com.huypt.user_service.dtos.request.CreateOrUpdateUserRequest;
+import com.huypt.user_service.dtos.request.LoginRequest;
 import com.huypt.user_service.dtos.response.UserResponse;
 import com.huypt.user_service.models.Profile;
 import com.huypt.user_service.models.Role;
@@ -11,12 +12,14 @@ import com.huypt.user_service.repositories.UserRepository;
 import com.huypt.user_service.utils.Constant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 public class AuthenService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public CommonResponse<UserResponse> register(CreateOrUpdateUserRequest request) {
         try {
@@ -41,7 +45,7 @@ public class AuthenService {
 
             User user = User.builder()
                     .username(request.getUsername())
-                    .password(request.getPassword())
+                    .password(bCryptPasswordEncoder.encode(request.getPassword()))
                     .build();
             user.setRelationProfile(Profile.builder()
                     .firstName(request.getFirstName())
@@ -67,7 +71,18 @@ public class AuthenService {
         }
     }
 
-
+    public CommonResponse<Map<String, Object>> login(LoginRequest request){
+        try{
+            User userExistByUsername = userRepository.findByUsername(request.getUsername()).orElse(null);
+            if(ObjectUtils.isEmpty(userExistByUsername)){
+                return CommonResponse.badRequest(null, Constant.USERNAME_OR_PASSWORD_IS_NOT_CORRECT);
+            }
+            return null;
+        } catch (Exception e) {
+            log.error("[ERROR-TO-LOGIN] {}", e.getMessage());
+            return CommonResponse.internalServerError(null, null);
+        }
+    }
 
 
 }

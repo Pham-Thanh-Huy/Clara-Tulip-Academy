@@ -6,14 +6,13 @@ import com.huypt.user_service.utils.Constant;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.huypt.user_service.repositories.UserRepository;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 @Component
