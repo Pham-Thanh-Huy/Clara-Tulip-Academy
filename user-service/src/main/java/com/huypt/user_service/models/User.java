@@ -2,10 +2,7 @@ package com.huypt.user_service.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
@@ -39,6 +36,8 @@ public class User {
     private List<UserToken> userTokens = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ToString.Exclude
+    @Builder.Default
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"), // đây là ID của User

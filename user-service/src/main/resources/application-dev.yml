@@ -14,8 +14,8 @@ spring:
     hibernate:
       ddl-auto: update
 
-
-token-authen:
-  secret-key: "C12L10A82R19A019ACA8219DE03MY"
-  bearer: "Bearer "
-  expiration: 2592000000L #60(Second) * 60(Munites) * 24(hours) * 30(days) * 1000L(milisecond - L is long)
+application:
+  token-authen:
+    secret-key: "C12L10A82R19A019ACA8219DE03MYK9SDAH63"
+    bearer: "Bearer "
+    expiration: 2592000000 #60(Second) * 60(Munites) * 24(hours) * 30(days) * 1000(mili second)

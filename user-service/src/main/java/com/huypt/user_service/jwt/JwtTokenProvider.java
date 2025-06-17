@@ -1,12 +1,12 @@
-package com.huypt.user_service.security.jwt;
+package com.huypt.user_service.jwt;
 
 import com.huypt.user_service.config.ApplicationProperties;
 import com.huypt.user_service.models.User;
+import com.huypt.user_service.repositories.UserRepository;
 import com.huypt.user_service.utils.Constant;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
-import com.huypt.user_service.repositories.UserRepository;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
