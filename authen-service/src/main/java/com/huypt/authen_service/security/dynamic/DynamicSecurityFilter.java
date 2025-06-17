@@ -1,4 +1,4 @@
-package com.huypt.user_service.security.dynamic;
+package com.huypt.authen_service.security.dynamic;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

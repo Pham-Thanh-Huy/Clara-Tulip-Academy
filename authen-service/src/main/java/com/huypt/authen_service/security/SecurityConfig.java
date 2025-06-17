@@ -1,4 +1,4 @@
-package com.huypt.user_service.security;
+package com.huypt.authen_service.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -12,20 +12,24 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public SecurityFilterChain config(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(
-                (auth) ->
-                        auth.requestMatchers("/").permitAll()
-                                .anyRequest().permitAll()
-        );
-
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(
+                        (auth) ->
+                                auth.requestMatchers("/**").permitAll()
+                                        .anyRequest().authenticated()
+                ).exceptionHandling(ex -> {
+                    ex.authenticationEntryPoint(restAuthenticationEntryPoint);
+                });
         return http.build();
     }
 }
