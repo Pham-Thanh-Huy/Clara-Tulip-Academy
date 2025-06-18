@@ -52,4 +52,9 @@ public class CommonResponse<T> {
         return new CommonResponse<>(data, new Message(msg, ResponseStatus.SERVICE_UNAVAILABLE.getStatus()));
     }
 
+    public static <T> CommonResponse<T> custom(T data, String message, int code) {
+
+        return new CommonResponse<>(data, new Message(message, code));
+    }
+
 }
