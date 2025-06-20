@@ -2,16 +2,19 @@ package com.huypt.authen_service.security.jwt;
 
 import com.huypt.authen_service.config.ApplicationProperties;
 import com.huypt.authen_service.utils.Constant;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
@@ -30,9 +33,22 @@ public class JwtTokenProvider {
     }
 
 
-//    public String parseTokenToUsername(String token){
-//
-//    }
+    public Long parseTokenToUserId(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(Keys.hmacShaKeyFor(config.getTokenAuthen().getSecretKey().getBytes(StandardCharsets.UTF_8)))
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+
+            Object user = claims.get("user");
+            return user != null ? Long.parseLong(user.toString()) : null;
+
+        } catch (Exception e) {
+            log.error("[ERROR-TO-PARSE-TOKEN-JWT] {}", e.getMessage());
+            return null;
+        }
+    }
 
 
 }

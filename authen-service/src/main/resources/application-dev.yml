@@ -9,3 +9,8 @@ application:
     secret-key: "C12L10A82R19A019ACA8219DE03MYK9SDAH63"
     bearer: "Bearer "
     expiration: 2592000000 #60(Second) * 60(Munites) * 24(hours) * 30(days) * 1000(mili second)
+  service:
+    user-service: "http://localhost:8080"
+
+server:
+  port: 8081
