@@ -3,6 +3,16 @@ eureka:
     service-url:
       defaultZone: http://localhost:8671/eureka/
 
+spring:
+  application:
+    name: authen-service
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        web: DEBUG
 
 application:
   token-authen:

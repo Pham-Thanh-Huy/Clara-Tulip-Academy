@@ -13,15 +13,17 @@ import org.springframework.stereotype.Component;
 public class HttpServletResponseCustom {
     private final ObjectMapper mapper;
 
-    public void custom(HttpServletResponse response, String message, int code){
-        try{
-            response.setHeader("Access-Control-Allow-Originl", "*");
+    public void custom(HttpServletResponse response, String message, int code) {
+        try {
+            response.setHeader("Access-Control-Allow-Origin", "*");
             response.setHeader("Cache-Control", "no-cache");
             response.setCharacterEncoding("utf-8");
             response.setContentType("application/json");
-            response.getWriter().println(mapper.writeValueAsString(CommonResponse.custom(null, message, code)));
+            response.setStatus(code);
+            String json = mapper.writeValueAsString(CommonResponse.custom(null, message, code));
+            response.getWriter().write(json);
             response.getWriter().flush();
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("[ERROR-TO-CUSTOM-RESPONSE] {}", e.getMessage());
         }
     }

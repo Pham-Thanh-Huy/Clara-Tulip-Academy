@@ -20,6 +20,7 @@ public class CallAPIExternal {
 
     public UserResponse getUserById(Long id){
         try{
+            log.info("[CALL-EXTERNAL-API-GET-USER] with id: {}", id);
             Request request = new Request.Builder()
                     .url(String.format("%s/api/v1/get-user/%d", config.getService().getUserService(), id))
                     .get()
@@ -35,7 +36,8 @@ public class CallAPIExternal {
             }
 
             // ------> IF SUCCESS
-            JsonNode nodeResponse = mapper.readTree(response.toString());
+
+            JsonNode nodeResponse = mapper.readTree(response.body().string());
             JsonNode data = nodeResponse.path("data");
             UserResponse userResponse = mapper.treeToValue(data, UserResponse.class);
             return userResponse;
