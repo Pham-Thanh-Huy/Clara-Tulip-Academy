@@ -1,0 +1,73 @@
+version: "3.7"
+
+services:
+  eureka-server:
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    image: academy/eureka-sever:${EUREKA_SERVER:-latest}
+    ports:
+      - "8671:8671"
+    container_name: eureka-server
+    networks:
+      - academy_network
+
+  cloud-gateway:
+    build:
+      context: ./cloud-gateway
+      dockerfile: Dockerfile
+    image: academy/cloud-gateway:${CLOUD_GATEWAY:-latest}
+    ports:
+      - "9898:9898"
+    container_name: cloud-gateway
+    networks:
+      - academy_network
+
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    image: academy/user-service:${USER_SERVICE:-latest}
+    ports:
+      - "8080:8080"
+    container_name: user-service
+    networks:
+      - academy_network
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  authen-service:
+    build:
+      context: ./authen-service
+      dockerfile: Dockerfile
+    image: academy/authen-service:${AUTHEN_SERVICE:-latest}
+    ports:
+      - "8081:8081"
+    container_name: authen-service
+    networks:
+      - academy_network
+
+  mysql:
+    image: hub.vtcc.vn:8989/mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: academy
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysql", "-h", "127.0.0.1", "-uroot", "-proot", "-e", "SELECT 1" ]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    networks:
+      - academy_network
+
+volumes:
+  mysql-data:
+    external: true
+
+networks:
+  academy_network:
