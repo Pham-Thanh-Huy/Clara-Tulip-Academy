@@ -49,13 +49,13 @@ services:
       - academy_network
 
   mysql:
-    image: hub.vtcc.vn:8989/mysql:latest
+    image: mysql:latest
     container_name: mysql-container
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: academy
     ports:
-      - "3306:3306"
+      - "3307:3306"
     healthcheck:
       test: [ "CMD", "mysql", "-h", "127.0.0.1", "-uroot", "-proot", "-e", "SELECT 1" ]
       interval: 10s

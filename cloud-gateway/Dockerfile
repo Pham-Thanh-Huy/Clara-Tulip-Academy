@@ -4,7 +4,6 @@ WORKDIR /app
 
 COPY src ./src
 COPY pom.xml .
-COPY mvn-settings.xml /root/.m2/settings.xml
 
 RUN ["mvn", "clean", "package", "-Dmaven.skip.test"]
 
