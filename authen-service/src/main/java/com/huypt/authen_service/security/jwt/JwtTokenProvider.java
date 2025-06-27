@@ -29,6 +29,9 @@ public class JwtTokenProvider {
             return Map.of(Constant.VALIDATE_TOKEN, Map.of("Invalid token!", Boolean.FALSE));
         }catch (ExpiredJwtException ex){
             return Map.of(Constant.VALIDATE_TOKEN, Map.of("Token expired!", Boolean.FALSE));
+        }catch (Exception ex){
+            log.warn("[PARSE-JWT-TOKEN] {}",ex.getMessage());
+            return Map.of(Constant.VALIDATE_TOKEN, Map.of("Invalid token!", Boolean.FALSE));
         }
     }
 

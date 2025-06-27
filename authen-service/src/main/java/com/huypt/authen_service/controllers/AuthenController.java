@@ -9,7 +9,6 @@ public class AuthenController {
 
     @PostMapping("/auth")
     public ResponseEntity<CommonResponse<String>> auth(){
-        System.out.println("hello");
         return ResponseEntity.ok(CommonResponse.success("Authen success!", null));
     }
 }
