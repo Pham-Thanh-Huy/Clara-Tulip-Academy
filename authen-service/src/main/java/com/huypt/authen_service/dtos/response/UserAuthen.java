@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @Builder
-public class UserResponse {
+public class UserAuthen {
     private String username;
 
     private String firstName;
@@ -22,4 +22,5 @@ public class UserResponse {
     private LocalDate birthOfDate;
 
     private List<String> roleName;
+
 }

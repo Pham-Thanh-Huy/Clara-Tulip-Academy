@@ -3,7 +3,7 @@ package com.huypt.authen_service.rest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.huypt.authen_service.config.ApplicationProperties;
-import com.huypt.authen_service.dtos.response.UserResponse;
+import com.huypt.authen_service.dtos.response.UserAuthen;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
@@ -18,7 +18,7 @@ public class CallAPIExternal {
     private final ApplicationProperties config;
     private final ObjectMapper mapper;
 
-    public UserResponse getUserById(Long id){
+    public UserAuthen getUserById(Long id){
         try{
             log.info("[CALL-EXTERNAL-API-GET-USER] with id: {}", id);
             Request request = new Request.Builder()
@@ -39,8 +39,8 @@ public class CallAPIExternal {
 
             JsonNode nodeResponse = mapper.readTree(response.body().string());
             JsonNode data = nodeResponse.path("data");
-            UserResponse userResponse = mapper.treeToValue(data, UserResponse.class);
-            return userResponse;
+            UserAuthen userAuthen = mapper.treeToValue(data, UserAuthen.class);
+            return userAuthen;
         }catch (Exception e){
             log.error("[ERROR-TO-CALL-API-GET-USER] {}", e.getMessage());
             return null;

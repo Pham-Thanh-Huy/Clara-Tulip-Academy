@@ -1,7 +1,7 @@
 package com.huypt.authen_service.security;
 
 import com.huypt.authen_service.config.ApplicationProperties;
-import com.huypt.authen_service.dtos.response.UserResponse;
+import com.huypt.authen_service.dtos.response.UserAuthen;
 import com.huypt.authen_service.dtos.status.ResponseStatus;
 import com.huypt.authen_service.rest.CallAPIExternal;
 import com.huypt.authen_service.security.jwt.JwtTokenProvider;
@@ -55,12 +55,12 @@ public class TokenSecurityConfig extends OncePerRequestFilter {
             return;
         }
 
-        UserResponse userResponse = callAPIExternal.getUserById(id);
-        if (ObjectUtils.isEmpty(userResponse)) {
+        UserAuthen userAuthen = callAPIExternal.getUserById(id);
+        if (ObjectUtils.isEmpty(userAuthen)) {
             servletResponseCustom.custom(response, "Token incorrect!", ResponseStatus.UNAUTHORIZED.getStatus());
             return;
         }
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userResponse,
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userAuthen,
                 null, new ArrayList<>()));
 
         filterChain.doFilter(request, response);
