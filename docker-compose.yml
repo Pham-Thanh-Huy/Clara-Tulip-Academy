@@ -54,6 +54,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: academy
+    volumes:
+      - mysql-data:/var/lib/mysql
     ports:
       - "3307:3306"
     healthcheck:
