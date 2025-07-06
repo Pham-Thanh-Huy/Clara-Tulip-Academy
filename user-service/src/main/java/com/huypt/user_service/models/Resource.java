@@ -23,8 +23,8 @@ public class Resource {
     @JsonIgnore
     @JoinTable(
             name = "role_resource",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "resource_id")
+            joinColumns = @JoinColumn(name = "resource_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private List<Role> roles;
 }
