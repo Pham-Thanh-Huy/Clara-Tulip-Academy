@@ -34,7 +34,6 @@ public class TokenSecurityConfig extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
             throws ServletException, IOException {
-
         String authToken = request.getHeader("Authorization");
         if (ObjectUtils.isEmpty(authToken) || !authToken.startsWith(config.getTokenAuthen().getBearer())) {
             servletResponseCustom.custom(response, "Token authentication required!", ResponseStatus.UNAUTHORIZED.getStatus());
