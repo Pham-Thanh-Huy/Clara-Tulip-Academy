@@ -27,7 +27,7 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .claim("user", user.getId())
+                .claim("username", user.getUsername())
                 .expiration(new Date(System.currentTimeMillis() + config.getTokenAuthen().getExpiration()))
                 .signWith(Keys.hmacShaKeyFor(config.getTokenAuthen().getSecretKey().getBytes(StandardCharsets.UTF_8)))
                 .compact();

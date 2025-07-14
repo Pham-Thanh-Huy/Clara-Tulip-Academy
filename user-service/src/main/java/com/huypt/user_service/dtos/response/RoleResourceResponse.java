@@ -12,5 +12,12 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class RoleResourceResponse {
-    private List<String> resources;
+    private List<Authen> authens;
+
+    @Data
+    @AllArgsConstructor
+    public static class Authen {
+        public String resource;
+        public List<String> role;
+    }
 }

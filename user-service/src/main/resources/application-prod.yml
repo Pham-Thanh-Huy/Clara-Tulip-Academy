@@ -10,7 +10,7 @@ spring:
   application:
     name: user-service
   datasource:
-    url: jdbc:mysql://mysql-container:3306/academy_user
+    url: jdbc:mysql://mysql-container:3306/academy
     username: root
     password: root
   jpa:

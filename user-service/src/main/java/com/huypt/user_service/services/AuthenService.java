@@ -24,6 +24,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -115,10 +116,12 @@ public class AuthenService {
         try{
             request.setRole(request.getRole().stream().map(r -> r.toUpperCase()).toList());
             List<Resource> resources = resourceRepository.findAllByRoles(request.getRole());
-
-            List<String> rsToString = resources.stream().map(Resource::getUri).toList();
+            List<RoleResourceResponse.Authen> authens = resources.stream()
+                    .map(resource ->new RoleResourceResponse.Authen(resource.getUri(),
+                            resource.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()))) // MAP LIST<ROLE> TO LIST<STRING>
+                    .collect(Collectors.toList());
             RoleResourceResponse roleResourceResponse = RoleResourceResponse.builder()
-                    .resources(rsToString)
+                    .authens(authens)
                     .build();
             return CommonResponse.success(roleResourceResponse, null);
         }catch (Exception e){
@@ -126,6 +129,4 @@ public class AuthenService {
             return CommonResponse.internalServerError(null, null);
         }
     }
-
-
 }
