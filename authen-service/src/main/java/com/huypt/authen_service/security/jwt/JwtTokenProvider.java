@@ -22,6 +22,7 @@ public class JwtTokenProvider {
 
     public Map<String, Map<String, Boolean>> valiateToken(String token){
         try{
+
             Jwts.parser().verifyWith(Keys.hmacShaKeyFor(config.getTokenAuthen().getSecretKey().getBytes(StandardCharsets.UTF_8)))
                     .build().parseClaimsJws(token);
             return Map.of(Constant.VALIDATE_TOKEN, Map.of("Success!", Boolean.TRUE));
@@ -36,7 +37,7 @@ public class JwtTokenProvider {
     }
 
 
-    public Long parseTokenToUserId(String token) {
+    public String parseTokenToUsername(String token) {
         try {
             Claims claims = Jwts.parser()
                     .verifyWith(Keys.hmacShaKeyFor(config.getTokenAuthen().getSecretKey().getBytes(StandardCharsets.UTF_8)))
@@ -44,8 +45,8 @@ public class JwtTokenProvider {
                     .parseSignedClaims(token)
                     .getPayload();
 
-            Object user = claims.get("user");
-            return user != null ? Long.parseLong(user.toString()) : null;
+            Object user = claims.get("username");
+            return user != null ? String.valueOf(user): null;
 
         } catch (Exception e) {
             log.error("[ERROR-TO-PARSE-TOKEN-JWT] {}", e.getMessage());

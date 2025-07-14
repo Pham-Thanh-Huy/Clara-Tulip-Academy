@@ -6,6 +6,7 @@ import com.huypt.authen_service.dtos.status.ResponseStatus;
 import com.huypt.authen_service.rest.CallAPIExternal;
 import com.huypt.authen_service.security.jwt.JwtTokenProvider;
 import com.huypt.authen_service.security.utils.HttpServletResponseCustom;
+import com.huypt.authen_service.services.CustomUserDetailsService;
 import com.huypt.authen_service.utils.Constant;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -28,12 +30,12 @@ public class TokenSecurityConfig extends OncePerRequestFilter {
     private final HttpServletResponseCustom servletResponseCustom;
     private final ApplicationProperties config;
     private final JwtTokenProvider tokenProvider;
-    private final CallAPIExternal callAPIExternal;
-
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
             throws ServletException, IOException {
+
         String authToken = request.getHeader("Authorization");
         if (ObjectUtils.isEmpty(authToken) || !authToken.startsWith(config.getTokenAuthen().getBearer())) {
             servletResponseCustom.custom(response, "Token authentication required!", ResponseStatus.UNAUTHORIZED.getStatus());
@@ -48,18 +50,20 @@ public class TokenSecurityConfig extends OncePerRequestFilter {
             servletResponseCustom.custom(response, message, ResponseStatus.UNAUTHORIZED.getStatus());
             return;
         }
-        Long id = tokenProvider.parseTokenToUserId(token);
-        if (ObjectUtils.isEmpty(id)) {
+        String username = tokenProvider.parseTokenToUsername(token);
+        if (ObjectUtils.isEmpty(username)) {
             servletResponseCustom.custom(response, "Token incorrect!", ResponseStatus.UNAUTHORIZED.getStatus());
             return;
         }
 
-        UserAuthen userAuthen = callAPIExternal.getUserById(id);
-        if (ObjectUtils.isEmpty(userAuthen)) {
+        // LOAD USER BY USERNAME
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+        if (ObjectUtils.isEmpty(userDetails)) {
             servletResponseCustom.custom(response, "Token incorrect!", ResponseStatus.UNAUTHORIZED.getStatus());
             return;
         }
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userAuthen,
+
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(null,
                 null, new ArrayList<>()));
 
         filterChain.doFilter(request, response);
