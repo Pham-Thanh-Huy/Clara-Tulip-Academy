@@ -39,4 +39,31 @@ public class UserService {
             return CommonResponse.internalServerError(null, null);
         }
     }
+
+
+
+    // -------------------------- INTERNAL API ---------------------------------
+    public CommonResponse<UserResponse> getUserByUsername(String username){
+        try{
+            User user = userRepository.findByUsername(username).orElse(null);
+            if(ObjectUtils.isEmpty(user)){
+                return CommonResponse.notFound(null, String.format("User not exist by username: %s", username));
+            }
+
+            UserResponse response = UserResponse.builder()
+                    .id(user.getId())
+                    .username(user.getUsername())
+                    .firstName(user.getProfile().getFirstName())
+                    .lastName(user.getProfile().getLastName())
+                    .age(user.getProfile().getAge())
+                    .birthOfDate(user.getProfile().getBirthOfDate())
+                    .roleName(user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                    .password(user.getPassword())
+                    .build();
+            return CommonResponse.success(response, null);
+        } catch (Exception e) {
+            log.error("[ERROR-TO-GET-USER-BY-USERNAME] {}", e.getMessage());
+            return CommonResponse.internalServerError(null, null);
+        }
+    }
 }

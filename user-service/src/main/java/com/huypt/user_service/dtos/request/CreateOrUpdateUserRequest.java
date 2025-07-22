@@ -16,6 +16,7 @@ public class CreateOrUpdateUserRequest {
     @NotNullOrEmptyString(message = "password required and not null!")
     private String password;
 
+
     @NotNullOrEmptyString(message = "firstName required and not null!")
     private String firstName;
 
@@ -26,7 +27,6 @@ public class CreateOrUpdateUserRequest {
     @Min(value = 1, message = "age must be greater than or equal to 1")
     @Max(value = 100, message = "age must be less than or equal to 100")
     private Integer age;
-
 
     @NotNullOrEmptyString(message = "Date of birth is required!")
     @Pattern(

@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @AllArgsConstructor
 public class ApplicationProperties {
     private TokenAuthen tokenAuthen;
-
+    private Service service;
 
     @Data
     @AllArgsConstructor
@@ -21,4 +21,18 @@ public class ApplicationProperties {
         private String bearer;
         private Long expiration;
     }
+
+    @Data
+    @AllArgsConstructor
+    public static class Service {
+        private UserService userService;
+
+        @Data
+        @AllArgsConstructor
+        public static class UserService{
+            private String url;
+            private String name;
+        }
+    }
+
 }
