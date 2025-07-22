@@ -14,7 +14,21 @@ application:
     bearer: "Bearer "
     expiration: 2592000000 #60(Second) * 60(Munites) * 24(hours) * 30(days) * 1000(mili second)
   service:
-    user-service: "http://localhost:8080"
+    user-service:
+      url: http://localhost:8080
+      name: user-service
 
 server:
   port: 8081
+
+
+secure:
+  ignored:
+    urls:
+      - /swagger-ui/
+      - /swagger-resources/**
+      - /**/v2/api-docs
+      - /**/*.html
+      - /**/*.js
+      - /**/*.css
+      - /**/*.png

@@ -6,6 +6,7 @@ import com.huypt.authen_service.config.ApplicationProperties;
 import com.huypt.authen_service.rest.CallAPIExternal;
 import com.huypt.authen_service.security.jwt.JwtTokenProvider;
 import com.huypt.authen_service.security.utils.HttpServletResponseCustom;
+import com.huypt.authen_service.services.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,11 +23,11 @@ public class SecurityConfig {
     private final HttpServletResponseCustom servletResponseCustom;
     private final ApplicationProperties config;
     private final JwtTokenProvider tokenProvider;
-    private final CallAPIExternal callAPIExternal;
+    private final CustomUserDetailsService customUserDetailsService;
     private final ObjectMapper mapper;
     @Bean
     public TokenSecurityConfig tokenSecurityConfig() {
-        return new TokenSecurityConfig(servletResponseCustom, config, tokenProvider, callAPIExternal);
+        return new TokenSecurityConfig(servletResponseCustom, config, tokenProvider, customUserDetailsService);
     }
     @Bean
     public RestAuthenticationEntryPoint restAuthenticationEntryPoint(){

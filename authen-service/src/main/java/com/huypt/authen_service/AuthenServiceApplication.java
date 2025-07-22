@@ -4,9 +4,15 @@ import com.huypt.authen_service.config.ApplicationProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @SpringBootApplication
 @EnableConfigurationProperties(ApplicationProperties.class)
+@EnableFeignClients(basePackages = "com.huypt.authen_service.client")
 public class AuthenServiceApplication {
 
 	public static void main(String[] args) {

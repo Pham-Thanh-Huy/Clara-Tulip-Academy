@@ -24,7 +24,14 @@ public class ApplicationProperties {
 
     @Data
     @AllArgsConstructor
-    public static class Service{
-        private String userService;
+    public static class Service {
+        private UserService userService;
+
+        @Data
+        @AllArgsConstructor
+        public static class UserService{
+            private String url;
+            private String name;
+        }
     }
 }

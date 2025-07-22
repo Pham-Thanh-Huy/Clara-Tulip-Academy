@@ -11,7 +11,11 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class UserAuthen {
+    private Long id;
+
     private String username;
+
+    private String password;
 
     private String firstName;
 
