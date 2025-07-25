@@ -1,9 +1,7 @@
 package com.huypt.authen_service.security;
 
 import com.huypt.authen_service.config.ApplicationProperties;
-import com.huypt.authen_service.dtos.response.UserAuthen;
 import com.huypt.authen_service.dtos.status.ResponseStatus;
-import com.huypt.authen_service.rest.CallAPIExternal;
 import com.huypt.authen_service.security.jwt.JwtTokenProvider;
 import com.huypt.authen_service.security.utils.HttpServletResponseCustom;
 import com.huypt.authen_service.services.CustomUserDetailsService;

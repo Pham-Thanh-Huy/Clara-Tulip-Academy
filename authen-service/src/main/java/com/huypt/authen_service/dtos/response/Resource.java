@@ -7,6 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class Resource{
     private Long id;
-    private String url;
+    private String uri;
     private String name;
 }

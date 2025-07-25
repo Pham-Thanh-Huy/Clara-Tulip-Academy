@@ -29,7 +29,7 @@ public class CustomUserDetail implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return resources.stream().map(
-                resource -> new SimpleGrantedAuthority(resource.getId()+":"+resource.getName())
+                resource -> new SimpleGrantedAuthority(resource.getUri())
         ).collect(Collectors.toList());
     }
 
