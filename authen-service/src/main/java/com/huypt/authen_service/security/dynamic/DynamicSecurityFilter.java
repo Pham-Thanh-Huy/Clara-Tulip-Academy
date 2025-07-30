@@ -19,6 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Locale;
 
 @RequiredArgsConstructor
 public class DynamicSecurityFilter extends OncePerRequestFilter {
@@ -30,9 +31,18 @@ public class DynamicSecurityFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
         String urlAuthen = request.getHeader(Constant.X_AUTHEN_URL);
+        String methodAuthen =  request.getHeader(Constant.X_AUTHEN_METHOD);
+
         if (ObjectUtils.isEmpty(urlAuthen)) {
             httpServletResponseCustom.custom(response,
                     "Authentication failed. Please send the request header and include the URL in it (X-Authen-Url)!",
+                    ResponseStatus.UNAUTHORIZED.getStatus());
+            return;
+        }
+
+        if (ObjectUtils.isEmpty(methodAuthen)){
+            httpServletResponseCustom.custom(response,
+                    "Authentication failed. Please send the request header and include the method in it (X-Authen-Method)!",
                     ResponseStatus.UNAUTHORIZED.getStatus());
             return;
         }
@@ -54,7 +64,8 @@ public class DynamicSecurityFilter extends OncePerRequestFilter {
         }
 
         for (GrantedAuthority grantedAuthority : grantedAuthorities) {
-            if(antPathMatcher.match(grantedAuthority.getAuthority(), urlAuthen)){
+            if(antPathMatcher.match(grantedAuthority.getAuthority(), urlAuthen) &&
+                    request.getMethod().toUpperCase().equals(methodAuthen)){
                 filterChain.doFilter(request, response);
                 return;
             }

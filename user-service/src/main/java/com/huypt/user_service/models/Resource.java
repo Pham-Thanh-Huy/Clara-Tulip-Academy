@@ -21,6 +21,13 @@ public class Resource {
 
     private String uri;
 
+    @Enumerated(EnumType.STRING)
+    private Method method;
+
+    private enum Method{
+        GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD
+    }
+
     @ManyToMany
     @JsonIgnore
     @JoinTable(
