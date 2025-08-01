@@ -32,4 +32,13 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
             nativeQuery = true
     )
     List<Resource> findAllByUserId(@Param("userId") Long userId);
+
+    @Query(
+            value = "SELECT DISTINCT rs.* FROM resource as rs " +
+                    "JOIN role_resource as rr ON rs.id = rr.resource_id " +
+                    "JOIN role as r ON r.id = rr.role_id " +
+                    "WHERE r.name = 'PERMIT_ALL'",
+            nativeQuery = true
+    )
+    List<Resource> findPermitAllResource();
 }

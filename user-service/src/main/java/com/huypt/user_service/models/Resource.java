@@ -24,7 +24,7 @@ public class Resource {
     @Enumerated(EnumType.STRING)
     private Method method;
 
-    private enum Method{
+    public enum Method{
         GET, POST, PUT, DELETE, OPTIONS, PATCH, HEAD
     }
 

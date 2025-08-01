@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 public class ResourceService {
     private final ResourceRepository resourceRepository;
 
-    public CommonResponse<List<ResourceResponse>> getListResourceByUserId(Long userId){
-        try{
+    public CommonResponse<List<ResourceResponse>> getListResourceByUserId(Long userId) {
+        try {
             List<Resource> resources = resourceRepository.findAllByUserId(userId);
-            if (ObjectUtils.isEmpty(resources)){
+            if (ObjectUtils.isEmpty(resources)) {
                 return CommonResponse.notFound(null, String.format("Not have any resource by user_id = %d", userId));
             }
 
@@ -32,16 +32,16 @@ public class ResourceService {
                     .build()).collect(Collectors.toList());
 
             return CommonResponse.success(resourceResponses, null);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("[ERROR-TO-GET-LIST-RESOURCE-BY-USER-ID] {}", e.getMessage());
             return CommonResponse.internalServerError(null, null);
         }
     }
 
-    public CommonResponse<List<ResourceResponse>> getAllResource(){
-        try{
+    public CommonResponse<List<ResourceResponse>> getAllResource() {
+        try {
             List<Resource> resources = resourceRepository.findAll();
-            if (ObjectUtils.isEmpty(resources)){
+            if (ObjectUtils.isEmpty(resources)) {
                 return CommonResponse.notFound(null, String.format("Not have any resource in system"));
             }
 
@@ -52,9 +52,12 @@ public class ResourceService {
                     .build()).collect(Collectors.toList());
 
             return CommonResponse.success(resourceResponses, null);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("[ERROR-TO-GET-LIST-RESOURCE] {}", e.getMessage());
             return CommonResponse.internalServerError(null, null);
         }
     }
+
+
+
 }

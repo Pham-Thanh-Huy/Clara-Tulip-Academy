@@ -4,6 +4,8 @@ import com.huypt.user_service.dtos.CommonResponse;
 import com.huypt.user_service.dtos.request.CreateOrUpdateUserRequest;
 import com.huypt.user_service.dtos.request.LoginRequest;
 import com.huypt.user_service.dtos.request.RoleResourceRequest;
+import com.huypt.user_service.dtos.response.MethodResourceResponse;
+import com.huypt.user_service.dtos.response.ResourceResponse;
 import com.huypt.user_service.dtos.response.RoleResourceResponse;
 import com.huypt.user_service.dtos.response.UserResponse;
 import com.huypt.user_service.dtos.status.ResponseStatus;
@@ -44,6 +46,7 @@ public class AuthenService {
     private final ResourceRepository resourceRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     public CommonResponse<UserResponse> register(CreateOrUpdateUserRequest request) {
         try {
             User userExistByUsername = userRepository.findByUsername(request.getUsername()).orElse(null);
@@ -86,14 +89,14 @@ public class AuthenService {
         }
     }
 
-    public CommonResponse<Map<String, Object>> login(LoginRequest request){
-        try{
+    public CommonResponse<Map<String, Object>> login(LoginRequest request) {
+        try {
             User userExistByUsername = userRepository.findByUsername(request.getUsername()).orElse(null);
-            if(ObjectUtils.isEmpty(userExistByUsername)){
+            if (ObjectUtils.isEmpty(userExistByUsername)) {
                 return CommonResponse.badRequest(null, Constant.USERNAME_OR_PASSWORD_IS_NOT_CORRECT);
             }
 
-            if(!bCryptPasswordEncoder.matches(request.getPassword(), userExistByUsername.getPassword())){
+            if (!bCryptPasswordEncoder.matches(request.getPassword(), userExistByUsername.getPassword())) {
                 return CommonResponse.badRequest(null, Constant.USERNAME_OR_PASSWORD_IS_NOT_CORRECT);
             }
             String token = jwtTokenProvider.generateToken(request.getUsername());
@@ -112,21 +115,36 @@ public class AuthenService {
         -------> LIST API INTERNAL
      */
 
-    public CommonResponse<RoleResourceResponse> findListResourceByListRole(RoleResourceRequest request){
-        try{
-            request.setRole(request.getRole().stream().map(r -> r.toUpperCase()).toList());
+    public CommonResponse<RoleResourceResponse> findListResourceByListRole(RoleResourceRequest request) {
+        try {
+            request.setRole(request.getRole().stream().map(String::toUpperCase).toList());
             List<Resource> resources = resourceRepository.findAllByRoles(request.getRole());
             List<RoleResourceResponse.Authen> authens = resources.stream()
-                    .map(resource ->new RoleResourceResponse.Authen(resource.getUri(),
-                            resource.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()))) // MAP LIST<ROLE> TO LIST<STRING>
+                    .map(resource -> new RoleResourceResponse.Authen(resource.getUri(),
+                            resource.getRoles().stream().map(Role::getName).collect(Collectors.toList()))) // MAP LIST<ROLE> TO LIST<STRING>
                     .collect(Collectors.toList());
             RoleResourceResponse roleResourceResponse = RoleResourceResponse.builder()
                     .authens(authens)
                     .build();
             return CommonResponse.success(roleResourceResponse, null);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("[INTERNAL][ERROR-FIND-LIST-RESOURCE-BY-LIST-ROLE] {}", e.getMessage());
             return CommonResponse.internalServerError(null, null);
         }
     }
+
+    public CommonResponse<MethodResourceResponse> findListResourceByPermitAllRole() {
+        try {
+            List<Resource> resources = resourceRepository.findPermitAllResource();
+            List<MethodResourceResponse.Authen> authens = resources.stream().map(resource -> new MethodResourceResponse.Authen(resource.getUri(),
+                            resource.getMethod().toString())) // MAP LIST<ROLE> TO LIST<STRING>
+                    .collect(Collectors.toList());
+            MethodResourceResponse permitAll = MethodResourceResponse.builder().authens(authens).build();
+            return CommonResponse.success(permitAll, null);
+        } catch (Exception e) {
+            log.error("[INTERNAL][ERROR-FIND-LIST-RESOURCE-BY-LIST-ROLE] {}", e.getMessage());
+            return CommonResponse.internalServerError(null, null);
+        }
+    }
+
 }
