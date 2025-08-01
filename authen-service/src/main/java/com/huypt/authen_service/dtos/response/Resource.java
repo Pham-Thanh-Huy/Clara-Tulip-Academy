@@ -8,5 +8,6 @@ import lombok.Data;
 public class Resource{
     private Long id;
     private String uri;
+    private String method;
     private String name;
 }

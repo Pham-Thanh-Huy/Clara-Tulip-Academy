@@ -3,7 +3,7 @@ package com.huypt.authen_service.services;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.huypt.authen_service.client.UserFeignClient;
+import com.huypt.authen_service.client.UserServiceFeignClient;
 import com.huypt.authen_service.domain.CustomUserDetail;
 import com.huypt.authen_service.dtos.response.Resource;
 import com.huypt.authen_service.dtos.response.UserAuthen;
@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-    private final UserFeignClient userFeignClient;
+    private final UserServiceFeignClient userFeignClient;
     private final ObjectMapper mapper;
 
     @Override
@@ -44,5 +44,4 @@ public class CustomUserDetailsService implements UserDetailsService {
             return null;
         }
     }
-
 }

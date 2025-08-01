@@ -4,6 +4,8 @@ import com.huypt.authen_service.config.ApplicationProperties;
 import com.huypt.authen_service.dtos.status.ResponseStatus;
 import com.huypt.authen_service.security.jwt.JwtTokenProvider;
 import com.huypt.authen_service.security.utils.HttpServletResponseCustom;
+import com.huypt.authen_service.security.utils.ValidateEndpointSkipAuthen;
+import com.huypt.authen_service.security.utils.ValidateEndpoints;
 import com.huypt.authen_service.services.CustomUserDetailsService;
 import com.huypt.authen_service.utils.Constant;
 import jakarta.servlet.FilterChain;
@@ -25,15 +27,31 @@ import java.util.Map;
 
 
 @RequiredArgsConstructor
-public class TokenSecurityConfig extends OncePerRequestFilter {
+public class TokenSecurityConfig extends OncePerRequestFilter{
     private final HttpServletResponseCustom servletResponseCustom;
     private final ApplicationProperties config;
     private final JwtTokenProvider tokenProvider;
     private final CustomUserDetailsService customUserDetailsService;
+    private final ValidateEndpointSkipAuthen validateEndpointSkipAuthen;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
             throws ServletException, IOException {
+        // -----> CHECK IF PERMIT ALL ENDPOINT OR IGNORE ENDPOINT OR METHOD OPTIONS ----> SKIP AUTHEN
+        Map<String, String> endpointSkipAuthen = validateEndpointSkipAuthen.validatePermitAllEnpointds(request);
+        for(Map.Entry<String, String> entry : endpointSkipAuthen.entrySet()){
+            String key = entry.getKey();
+            if(key.equals(ValidateEndpoints.REQUEST_NOT_ENOUGH.getMessage())){
+                servletResponseCustom.custom(response, entry.getValue(), ResponseStatus.UNAUTHORIZED.getStatus());
+                return;
+            }
+
+            if(key.equals(ValidateEndpoints.HAS_PERMIT_ALL_ENPOINT.getMessage())){
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+        }
 
         String authToken = request.getHeader("Authorization");
         if (ObjectUtils.isEmpty(authToken) || !authToken.startsWith(config.getTokenAuthen().getBearer())) {
@@ -68,4 +86,6 @@ public class TokenSecurityConfig extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
+
 }

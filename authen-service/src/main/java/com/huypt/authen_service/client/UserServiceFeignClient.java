@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "${application.service.user-service.name}",
         url = "${application.service.user-service.url}")
 @Component
-public interface UserFeignClient {
+public interface UserServiceFeignClient {
 
     @GetMapping("/internal/get-user-by-username")
     JsonNode getUserByUsername(@RequestParam String username);
@@ -20,4 +20,7 @@ public interface UserFeignClient {
 
     @GetMapping("/internal/get-all-resource")
     JsonNode getAllResource();
+
+    @GetMapping("/internal/get-resource/by-permit-all-role")
+    JsonNode findListResourceByPermitAllRole();
 }

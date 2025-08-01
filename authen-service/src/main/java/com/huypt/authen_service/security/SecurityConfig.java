@@ -7,6 +7,7 @@ import com.huypt.authen_service.security.config.IgnoreUrlsConfig;
 import com.huypt.authen_service.security.dynamic.DynamicSecurityFilter;
 import com.huypt.authen_service.security.jwt.JwtTokenProvider;
 import com.huypt.authen_service.security.utils.HttpServletResponseCustom;
+import com.huypt.authen_service.security.utils.ValidateEndpointSkipAuthen;
 import com.huypt.authen_service.services.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -24,24 +25,24 @@ import org.springframework.security.web.context.SecurityContextHolderFilter;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final ValidateEndpointSkipAuthen validateEndpointSkipAuthen;
+    private final HttpServletResponseCustom servletResponseCustom;
    /*
     - TokenSecurity Config và DynamicSecurityFilter phải inject kiểu này bởi vì không đặt đưọc @Component
     - Việc đặt component sẽ dẫn đến Spring Đăng kí luôn lớp filter và sẽ bị gọi luôn trước khi filter được gọi qua security
     */
 
 //    --------------- INJECT BEAN TO TOKEN SECURITY CONFIG--------------------
-    private final HttpServletResponseCustom servletResponseCustom;
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomUserDetailsService customUserDetailsService;
     private final ApplicationProperties config;
     public TokenSecurityConfig tokenSecurityConfig() {
-        return new TokenSecurityConfig(servletResponseCustom, config, jwtTokenProvider, customUserDetailsService);
+        return new TokenSecurityConfig(servletResponseCustom, config, jwtTokenProvider, customUserDetailsService, validateEndpointSkipAuthen);
     }
 //     --------------- INJECT BEAN TO DYNAMIC SECURITY FILTER--------------------
     private final HttpServletResponseCustom httpServletResponseCustom;
-    private final IgnoreUrlsConfig ignoreUrlsConfig;
     public DynamicSecurityFilter dynamicSecurityFilter(){
-        return new DynamicSecurityFilter(httpServletResponseCustom, ignoreUrlsConfig);
+        return new DynamicSecurityFilter(httpServletResponseCustom, validateEndpointSkipAuthen, httpServletResponseCustom);
     }
 
     @Bean
@@ -55,7 +56,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(
                         (auth) ->
-                                auth.anyRequest().authenticated()
+                                auth.anyRequest().permitAll() // -----> AUTO PERMIT ALL BECASUSE NOT CHECK AUTH IN HERE CHECK AUTH BY DYNAMIC SECURITY
                 ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(tokenSecurityConfig(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(dynamicSecurityFilter(), TokenSecurityConfig.class);

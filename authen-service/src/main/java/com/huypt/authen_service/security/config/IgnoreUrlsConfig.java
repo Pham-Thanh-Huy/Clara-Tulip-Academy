@@ -9,7 +9,6 @@ import java.util.List;
 
 @Data
 @Component
-//@AllArgsConstructor
 @ConfigurationProperties(prefix = "secure.ignored")
 public class IgnoreUrlsConfig {
     private List<String> urls;
