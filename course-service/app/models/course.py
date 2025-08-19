@@ -1,4 +1,4 @@
-from sqlalchemy import Column, NVARCHAR, Text, Integer, ForeignKey, DateTime, Boolean
+from sqlalchemy import Column, VARCHAR, Text, BigInteger, DateTime, Boolean
 from sqlalchemy.orm import relationship
 
 from app.config.database import Base
@@ -10,16 +10,14 @@ from app.config.database import Base
 class Course(Base):
     __tablename__ = 'course'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(NVARCHAR(255), nullable=False, unique=True)
-    introduction = Column(NVARCHAR(255), nullable=False, unique=True)
+    id = Column(BigInteger, primary_key=True)
+    name = Column(VARCHAR(255), nullable=False, unique=True)
+    introduction = Column(VARCHAR(255), nullable=False, unique=True)
     description = Column(Text, nullable=True)
-    user_id = Column(Integer, nullable=False)  # ---> USER_ID IN USER-SERVICE!
     created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    updated_at = Column(DateTime, nullable=True)
     is_deleted  = Column(Boolean, default=0, nullable=False)
 
     # RELATIONSHIP
-    category_id = Column(Integer, ForeignKey('category.id'))
-    category = relationship("Category", backref='course')
+    category = relationship("Category", secondary="category_course", back_populates="course")
 
