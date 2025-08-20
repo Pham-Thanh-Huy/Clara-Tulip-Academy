@@ -4,7 +4,7 @@ from app.config.database import Base
 
 '''
     *** 17/08/2025 
-    *** 
+    *** CREATE TABLES RELATION SHIP MANY TO MANY IN THIS FILE
 '''
 
 category_course = Table(
