@@ -9,7 +9,9 @@ async def lifespan(app: FastAPI):
         eureka_server="http://localhost:8671/eureka",
         app_name="course-service",
         instance_port=8084,
-        instance_host="localhost", # ---> CHANGE NAME SERVICE IF U RUN IN DOCKER IN THE SAME NETWORK (EX:
+        # ---> CHANGE NAME SERVICE IF U RUN IN DOCKER IN THE SAME NETWORK
+        # (EX: IF EUREKA_SERVER AND COURSE-SERVICE IN SAME NETWORK, instance_host (*localhost*) WILL CHANGE TO *course-serice*
+        instance_host="localhost",
         on_error=on_error
     )
 
