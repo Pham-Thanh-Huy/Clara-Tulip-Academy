@@ -1,7 +1,6 @@
 package com.huypt.authen_service.security.dynamic;
 
 import com.huypt.authen_service.dtos.status.ResponseStatus;
-import com.huypt.authen_service.security.config.IgnoreUrlsConfig;
 import com.huypt.authen_service.security.utils.HttpServletResponseCustom;
 import com.huypt.authen_service.security.utils.ValidateEndpointSkipAuthen;
 import com.huypt.authen_service.security.utils.ValidateEndpoints;
@@ -11,17 +10,15 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpMethod;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -31,7 +28,7 @@ public class DynamicSecurityFilter extends OncePerRequestFilter {
     private final HttpServletResponseCustom servletResponseCustom;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
             throws ServletException, IOException {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
         String urlAuthen = request.getHeader(Constant.X_AUTHEN_URL);
