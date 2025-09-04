@@ -13,11 +13,11 @@ public class ApplicationProperties {
     @Data
     @AllArgsConstructor
     public static class Service {
-        private UserService userService;
+        private AuthenService authenService;
 
         @Data
         @AllArgsConstructor
-        public static class UserService{
+        public static class AuthenService {
             private String url;
             private String name;
         }
