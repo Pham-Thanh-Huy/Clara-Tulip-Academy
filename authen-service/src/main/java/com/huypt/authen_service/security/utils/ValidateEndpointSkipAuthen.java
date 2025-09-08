@@ -32,6 +32,12 @@ public class ValidateEndpointSkipAuthen {
         String urlAuthen = request.getHeader(Constant.X_AUTHEN_URL);
         String methodAuthen = request.getHeader(Constant.X_AUTHEN_METHOD);
 
+        for (String ignoreUrl : ignoreUrlsConfig.getUrls()) {
+            if (antPathMatcher.match(ignoreUrl, urlAuthen)) {
+                return Map.of(ValidateEndpoints.HAS_PERMIT_ALL_ENPOINT.getMessage(), "Skip authen!");
+            }
+        }
+
         if (ObjectUtils.isEmpty(urlAuthen)) {
             return Map.of(ValidateEndpoints.REQUEST_NOT_ENOUGH.getMessage(),
                     "Authentication failed. Please send the request header and include the URL in it (X-Authen-Url)!");
@@ -46,15 +52,10 @@ public class ValidateEndpointSkipAuthen {
             return Map.of(ValidateEndpoints.HAS_PERMIT_ALL_ENPOINT.getMessage(), "Skip authen!");
         }
 
-        for (String ignoreUrl : ignoreUrlsConfig.getUrls()) {
-            if (antPathMatcher.match(ignoreUrl, urlAuthen)) {
-                return Map.of(ValidateEndpoints.HAS_PERMIT_ALL_ENPOINT.getMessage(), "Skip authen!");
-            }
-        }
+
 
         JsonNode jsonNode = userServiceFeignClient.findListResourceByPermitAllRole().get("data").get("authens");
-        List<Resource> permitAllEndpoints = mapper.convertValue(jsonNode, new TypeReference<>() {
-        });
+        List<Resource> permitAllEndpoints = mapper.convertValue(jsonNode, new TypeReference<>() {});
         for(Resource permitAllEndpoint: permitAllEndpoints){
             if (antPathMatcher.match(permitAllEndpoint.getUri(), urlAuthen) && permitAllEndpoint.getMethod().equals(methodAuthen)) {
                 return Map.of(ValidateEndpoints.HAS_PERMIT_ALL_ENPOINT.getMessage(), "Skip authen!");
