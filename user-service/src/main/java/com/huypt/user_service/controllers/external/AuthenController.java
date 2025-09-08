@@ -7,6 +7,7 @@ import com.huypt.user_service.dtos.request.LoginRequest;
 import com.huypt.user_service.dtos.response.UserResponse;
 import com.huypt.user_service.services.AuthenService;
 import com.huypt.user_service.utils.Constant;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
@@ -24,6 +25,7 @@ import java.util.Map;
 public class AuthenController extends BaseController {
     private final AuthenService authenService;
 
+    @Operation(summary = "API Đăng ký tài khoản")
     @PostMapping("/register")
     public ResponseEntity<CommonResponse<UserResponse>> register(@RequestBody @Valid CreateOrUpdateUserRequest
                                                                                    createOrUpdateRequest) {
@@ -31,6 +33,7 @@ public class AuthenController extends BaseController {
         return baseControllerResponse(response);
     }
 
+    @Operation(summary = "API Đăng nhập")
     @PostMapping("/login")
     public ResponseEntity<CommonResponse<Map<String, Object>>> login(@RequestBody @Valid LoginRequest loginRequest){
         CommonResponse<Map<String, Object>> response = authenService.login(loginRequest);
